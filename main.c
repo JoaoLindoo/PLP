@@ -11,7 +11,6 @@
  * Luan
  */
 
-
 int tabuleiro[12][12];
 int tabuleiroCopia[12][12];
 int estado = 5;
