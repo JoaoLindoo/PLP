@@ -89,86 +89,69 @@ int verifica(int tabuleiro[12][12], int linha, int coluna, int direcao, int tama
     }
 }
 
-void alocarCT(int tabuleiro[12][12], int inicio) {
+void alocarCT(int tabuleiro[12][12]) {
     int linha = numeroRandom(0, 11);
     int coluna = numeroRandom(0, 11);
-    inicio = 0;
-    if (inicio > 11) {
-        inicio = 0;
-    }
     if (tabuleiro[linha][coluna] != 0 || tabuleiro[linha+1][coluna] != 0 || tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha][coluna+1] != 0 || tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha+1][coluna+1] != 0 || tabuleiro[linha-1][coluna+1] != 0) {
-        inicio += 3;
-        alocarCT(tabuleiro, inicio);
+        alocarCT(tabuleiro);
     }
     else {
         tabuleiro[linha][coluna] = 1;
     }
 }
 
-void alocarIAPA(int tabuleiro[12][12], int inicio) {
+void alocarIAPA(int tabuleiro[12][12]) {
     int direcao = numeroRandom(1, 2);
-    inicio = 0;
-    if (inicio > 8) {
-        inicio = 0;
-    }
     if (direcao == 1) {
         int linha = numeroRandom(0, 10);
-        int coluna = numeroRandom(inicio, 11);
+        int coluna = numeroRandom(0, 11);
         if(verifica(tabuleiro, linha, coluna, direcao, 2) == 1) {
             for (int i=linha; i<linha+2; i++) {
                 tabuleiro[i][coluna] = 2;
             }
         }
         else {
-            inicio += 3;
-            alocarIAPA(tabuleiro, inicio);
+            alocarIAPA(tabuleiro);
         }
     }
     else {
         int linha = numeroRandom(0, 11);
-        int coluna = numeroRandom(inicio, 10);
+        int coluna = numeroRandom(0, 10);
         if(verifica(tabuleiro, linha, coluna, direcao, 2) == 1) {
             for (int i=coluna; i<coluna+2; i++) {
                 tabuleiro[linha][i] = 2;
             }
         }
         else {
-            inicio += 3;
-            alocarIAPA(tabuleiro, inicio);
+            alocarIAPA(tabuleiro);
         }
     }
 }
 
-void alocarBMT(int tabuleiro[12][12], int inicio) {
+void alocarBMT(int tabuleiro[12][12]) {
     int direcao = numeroRandom(1, 2);// 1 para vertical, 2 para horizontal
-    inicio = 0;// contador para alterar o intervalo dos valores linha/coluna, garantindo maior distribuição na matriz
-    if (inicio > 9) {// garante que o contador esteja no limite para que a estrutura não ultrapasse a matriz
-        inicio = 0;
-    }
     if (direcao == 1) {
         int linha = numeroRandom(0, 9);// gera uma valor aleatorio para a linha
-        int coluna = numeroRandom(inicio, 11);// gera um valor aleatorio para a coluna
+        int coluna = numeroRandom(0, 11);// gera um valor aleatorio para a coluna
         if(verifica(tabuleiro, linha, coluna, direcao, 3) == 1) {
             for (int i=linha; i<linha+3; i++) {// alocação da estrutura na matriz
                 tabuleiro[i][coluna] = 3;
             }
         }
         else {
-            inicio += 3;
-            alocarBMT(tabuleiro, inicio);// chamada recursiva caso a estrutura não seja alocada na matriz
+            alocarBMT(tabuleiro);// chamada recursiva caso a estrutura não seja alocada na matriz
         }
     }
     else {
         int linha = numeroRandom(0, 11);
-        int coluna = numeroRandom(inicio, 9);
+        int coluna = numeroRandom(0, 9);
         if(verifica(tabuleiro, linha, coluna, direcao, 3) == 1) {
             for (int i=coluna; i<coluna+3; i++) {
                 tabuleiro[linha][i] = 3;
             }
         }
         else {
-            inicio += 3;
-            alocarBMT(tabuleiro, inicio);
+            alocarBMT(tabuleiro);
         }
     }
 }
@@ -195,18 +178,24 @@ void alocarBPC(int tabuleiro[12][12]){
 // alocação automática de estruturas na matriz
 void alocar() {
     alocarBPC(tabuleiro);
-    alocarBMT(tabuleiro, 0);
-    alocarBMT(tabuleiro, 0);
-    alocarIAPA(tabuleiro, 0);
-    alocarIAPA(tabuleiro, 0);
-    alocarCT(tabuleiro, 0);
-    alocarCT(tabuleiro, 0);
-    alocarCT(tabuleiro, 0);
-    alocarCT(tabuleiro, 0);
+    alocarBMT(tabuleiro);
+    alocarBMT(tabuleiro);
+    alocarIAPA(tabuleiro);
+    alocarIAPA(tabuleiro);
+    alocarCT(tabuleiro);
+    alocarCT(tabuleiro);
+    alocarCT(tabuleiro);
+    alocarCT(tabuleiro);
 }
 
 int main() {
     alocar();
     desenharInterface(0);
+    for (int i=0; i<12; i++) {
+        printf("\n");
+        for (int j=0; j<12; j++) {
+            printf("%d|", tabuleiro[i][j]);
+        }
+    }
     return 0;
 }
