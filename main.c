@@ -178,6 +178,35 @@ void desenharInterface (int mostrarTerreno){
                 if(tabuleiroCopia[i][j] == 2) printf("  2 |");
                 if(tabuleiroCopia[i][j] == 3) printf("  3 |");
                 if(tabuleiroCopia[i][j] == 4) printf("  4 |");
+                if(tabuleiroCopia[i][j] == 5) printf("  X |");
+
+            }
+            printf("\n");
+        }
+        printf("\n");
+        if(estado == 2) {
+            printf("  ====> AVISO : COLUNA OU LINHA, FORA DO PADRÃO \n");
+        }
+    }else {
+        printf("################################################################\n");
+        printf("#############       bombardment of the virus       #############\n");
+        printf("################################################################\n\n");
+        printf("      A    B    C    D    E    F    G    H    I    J    L    M\n");
+        printf("----------------------------------------------------------------\n");
+        for(i = 0; i <= 11 ; i++){
+            if (i > 9) {
+                printf("%i |", i);
+            }
+            else {
+                printf("%i  |", i);
+            }
+            for(j = 0; j <= 11; j++){
+                if(tabuleiro[i][j] == 0) printf("    |");
+                if(tabuleiro[i][j] == 1) printf("  1 |");
+                if(tabuleiro[i][j] == 2) printf("  2 |");
+                if(tabuleiro[i][j] == 3) printf("  3 |");
+                if(tabuleiro[i][j] == 4) printf("  4 |");
+                if(tabuleiro[i][j] == 5) printf("  X |");
 
             }
             printf("\n");
@@ -229,7 +258,7 @@ int jogadas(char coluna, int linha){
 
                 }
             }else {
-                tabuleiroCopia[linha][colunaID] = "X"; // Tiro no terreno
+                tabuleiroCopia[linha][colunaID] = 5; // Tiro no terreno
             }
             return 1;
         }
@@ -247,12 +276,12 @@ int main() {
         desenharInterface(0);
         printf("COLUNA => ");
         scanf("%c", &coluna);
-        printf("LINHA => ");
+        printf("\nLINHA => ");
         scanf("%i", &linha);
         getchar();
         estado = jogadas(coluna,linha);
         system("clear");
     }
-
+    desenharInterface(1); // Quando terminar mostra o campo original
     return 0;
 }
