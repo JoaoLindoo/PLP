@@ -14,7 +14,8 @@
 int tabuleiro[12][12];
 int tabuleiroCopia[12][12];
 int estado = 5;
-
+int pontuacao = 0;
+int bombas = 50;
 /*
  A variavel estado pode ter 4 valores:
     * 0: quando a posição já foi bombardeada
@@ -22,39 +23,7 @@ int estado = 5;
     * 2: posição inválida (quando o usuário informa uma posição que não existe)
     * 5: valor de inicialização
  */
-void desenharInterface (int mostrarTerreno){
-    int i, j;
-    if( mostrarTerreno == 0){
-        printf("################################################################\n");
-        printf("#############       bombardment of the virus       #############\n");
-        printf("################################################################\n\n");
-        printf("      A    B    C    D    E    F    G    H    I    J    L    M\n");
-        printf("----------------------------------------------------------------\n");
-        for(i = 0; i <= 11 ; i++){
-            if (i > 9) {
-                printf("%i |", i);
-            }
-            else {
-                printf("%i  |", i);
-            }
-            for(j = 0; j <= 11; j++){
-                if(tabuleiroCopia[i][j] == 0) printf("  ~ |");
-            }
-            printf("\n");
-        }
-        printf("\n");
-    }
-}
-int jogadas(char coluna, int linha){
-    if((coluna != 'A' && coluna != 'B' && coluna != 'C'
-            && coluna != 'D' && coluna != 'E' && coluna != 'F' && coluna != 'G' && coluna != 'H' && coluna != 'I' && coluna != 'J' && coluna != 'L' && coluna != 'M')) {
-        return 2 ; // Caso a coluna seria invalida
-    }else if((linha != 0 && linha != 1 && linha != 2 && linha != 3 && linha != 4 && linha != 5 && linha !=6 && linha != 7 && linha != 8 && linha != 9 && linha != 10 && linha != 11)) {
-        return 2; // Caso de linha invalida
-    }else {
 
-    }
-}
 
 // retorna um numero aleatorio dentro do intervalo estabelecido
 int numeroRandom(int inicio, int fim) {
@@ -188,14 +157,102 @@ void alocar() {
     alocarCT(tabuleiro);
 }
 
-int main() {
-    alocar();
-    desenharInterface(0);
-    for (int i=0; i<12; i++) {
-        printf("\n");
-        for (int j=0; j<12; j++) {
-            printf("%d|", tabuleiro[i][j]);
+void desenharInterface (int mostrarTerreno){
+    int i, j;
+    if( mostrarTerreno == 0){
+        printf("################################################################\n");
+        printf("#############       bombardment of the virus       #############\n");
+        printf("################################################################\n\n");
+        printf("      A    B    C    D    E    F    G    H    I    J    L    M\n");
+        printf("----------------------------------------------------------------\n");
+        for(i = 0; i <= 11 ; i++){
+            if (i > 9) {
+                printf("%i |", i);
+            }
+            else {
+                printf("%i  |", i);
+            }
+            for(j = 0; j <= 11; j++){
+                if(tabuleiroCopia[i][j] == 0) printf("  ~ |");
+                if(tabuleiroCopia[i][j] == 1) printf("  1 |");
+                if(tabuleiroCopia[i][j] == 2) printf("  2 |");
+                if(tabuleiroCopia[i][j] == 3) printf("  3 |");
+                if(tabuleiroCopia[i][j] == 4) printf("  4 |");
+
+            }
+            printf("\n");
         }
+        printf("\n");
     }
+}
+int jogadas(char coluna, int linha){
+    int colunaID;
+    bombas--;
+    if((coluna != 'A' && coluna != 'B' && coluna != 'C'
+            && coluna != 'D' && coluna != 'E' && coluna != 'F' && coluna != 'G' && coluna != 'H' && coluna != 'I' && coluna != 'J' && coluna != 'L' && coluna != 'M')) {
+        return 2 ; // Caso a coluna seria invalida
+    }else if((linha != 0 && linha != 1 && linha != 2 && linha != 3 && linha != 4 && linha != 5 && linha !=6 && linha != 7 && linha != 8 && linha != 9 && linha != 10 && linha != 11)) {
+        return 2; // Caso de linha invalida
+    }else {
+        // posição valida
+        if(coluna == 'A') colunaID = 0;
+        if(coluna == 'B') colunaID = 1;
+        if(coluna == 'C') colunaID = 2;
+        if(coluna == 'D') colunaID = 3;
+        if(coluna == 'E') colunaID = 4;
+        if(coluna == 'F') colunaID = 5;
+        if(coluna == 'G') colunaID = 6;
+        if(coluna == 'H') colunaID = 7;
+        if(coluna == 'I') colunaID = 8;
+        if(coluna == 'J') colunaID = 9;
+        if(coluna == 'L') colunaID = 10;
+        if(coluna == 'M') colunaID = 11;
+        //posicao ja bombardeada
+        if(tabuleiroCopia[linha][colunaID] != 0){
+            return 0;
+        }else {
+        // Se existir base
+            if(tabuleiro[linha][colunaID] != 0) {
+                pontuacao ++;
+
+                if(tabuleiro[linha][colunaID] == 1) {
+                    tabuleiroCopia[linha][colunaID] = 1;
+                }
+                if(tabuleiro[linha][colunaID] == 2) {
+                     tabuleiroCopia[linha][colunaID] = 2;
+                }
+                if(tabuleiro[linha][colunaID] == 3) {
+                     tabuleiroCopia[linha][colunaID] = 3;
+                }
+                if(tabuleiro[linha][colunaID] == 4) {
+                     tabuleiroCopia[linha][colunaID] = 4;
+
+                }
+            }else {
+                tabuleiroCopia[linha][colunaID] = "X"; // Tiro no terreno
+            }
+            return 1;
+        }
+     }
+}
+void menuGrafico();
+int main() {
+    printf("SALVE O MUNDO \n\n");
+    int i;
+    int j;
+    int linha;
+    char coluna;
+    alocar();
+    while(pontuacao != 18 && bombas > 0) {
+        desenharInterface(0);
+        printf("COLUNA => ");
+        scanf("%c", &coluna);
+        printf("LINHA => ");
+        scanf("%i", &linha);
+        getchar();
+        estado = jogadas(coluna,linha);
+        system("clear");
+    }
+
     return 0;
 }
