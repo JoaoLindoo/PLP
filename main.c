@@ -58,9 +58,9 @@ int jogadas(char coluna, int linha){
 
 // retorna um numero aleatorio dentro do intervalo estabelecido
 int numeroRandom(int inicio, int fim) {
+    int intervalo = (fim - inicio) + 1;
     srand(clock());
-    int numero = inicio + (rand() % fim);
-    return numero;
+    return inicio + (rand() % intervalo);
 }
 
 //garante que as estruturas fiquem separadas na matriz
