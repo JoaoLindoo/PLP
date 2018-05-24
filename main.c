@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /*
  * Grupo :
@@ -276,10 +277,11 @@ int main() {
         desenharInterface(0);
         printf("COLUNA => ");
         scanf("%c", &coluna);
+        char colunaUpperCase = (toupper(coluna));
         printf("\nLINHA => ");
         scanf("%i", &linha);
         getchar();
-        estado = jogadas(coluna,linha);
+        estado = jogadas(colunaUpperCase,linha);
         system("clear");
     }
     desenharInterface(1); // Quando terminar mostra o campo original
