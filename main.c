@@ -11,12 +11,18 @@
  * Matheus
  * Luan
  */
-
-int tabuleiro[12][12];
-int tabuleiroCopia[12][12];
+#define tamanho 12
+#define true 1
+#define false 0
+int tabuleiro[tamanho][tamanho];
+int tabuleiroCopia[tamanho][tamanho];
 int estado = 5;
 int pontuacao = 0;
 int bombas = 50;
+int vertical = 1;
+int horizontal = 2;
+
+
 /*
  A variavel estado pode ter 4 valores:
     * 0: quando a posição já foi bombardeada
@@ -34,32 +40,32 @@ int numeroRandom(int inicio, int fim) {
 }
 
 //garante que as estruturas fiquem separadas na matriz
-int verifica(int tabuleiro[12][12], int linha, int coluna, int direcao, int tamanho) {
-    if (direcao == 1) {
-        if (tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha+tamanho][coluna] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha-1][coluna+1] != 0 || tabuleiro[linha+tamanho][coluna-1] != 0 || tabuleiro[linha+tamanho][coluna+1] != 0) {
-            return 0;
+int verifica(int tabuleiro[tamanho][tamanho], int linha, int coluna, int direcao, int extensao) {
+    if (direcao == vertical) {
+        if (tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha+extensao][coluna] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha-1][coluna+1] != 0 || tabuleiro[linha+extensao][coluna-1] != 0 || tabuleiro[linha+extensao][coluna+1] != 0) {
+            return false;
         }
-        for (int i=linha; i<linha+tamanho; i++) {
+        for (int i=linha; i<linha+extensao; i++) {
             if(tabuleiro[i][coluna] != 0 || tabuleiro[i][coluna+1] != 0 || tabuleiro[i][coluna-1] != 0) {
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     }
     else {
-        if (tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha][coluna+tamanho] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha-1][coluna+tamanho] != 0 || tabuleiro[linha+1][coluna+tamanho] != 0) {
-            return 0;
+        if (tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha][coluna+extensao] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha-1][coluna+extensao] != 0 || tabuleiro[linha+1][coluna+extensao] != 0) {
+            return false;
         }
-        for (int i=coluna; i<coluna+tamanho; i++) {
+        for (int i=coluna; i<coluna+extensao; i++) {
             if(tabuleiro[linha][i] != 0 || tabuleiro[linha+1][i] != 0 || tabuleiro[linha-1][i] != 0) {
-                return 0;
+                return false;
             }
         }
-        return 1;
+        return true;
     }
 }
 
-void alocarCT(int tabuleiro[12][12]) {
+void alocarCT(int tabuleiro[tamanho][tamanho]) {
     int linha = numeroRandom(0, 11);
     int coluna = numeroRandom(0, 11);
     if (tabuleiro[linha][coluna] != 0 || tabuleiro[linha+1][coluna] != 0 || tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha][coluna+1] != 0 || tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha+1][coluna+1] != 0 || tabuleiro[linha-1][coluna+1] != 0) {
@@ -70,13 +76,14 @@ void alocarCT(int tabuleiro[12][12]) {
     }
 }
 
-void alocarIAPA(int tabuleiro[12][12]) {
-    int direcao = numeroRandom(1, 2);
-    if (direcao == 1) {
+void alocarIAPA(int tabuleiro[tamanho][tamanho]) {
+    int extensao = 2;
+    int direcao = numeroRandom(vertical, horizontal);
+    if (direcao == vertical) {
         int linha = numeroRandom(0, 10);
         int coluna = numeroRandom(0, 11);
-        if(verifica(tabuleiro, linha, coluna, direcao, 2) == 1) {
-            for (int i=linha; i<linha+2; i++) {
+        if(verifica(tabuleiro, linha, coluna, direcao, extensao) == true) {
+            for (int i=linha; i<linha+extensao; i++) {
                 tabuleiro[i][coluna] = 2;
             }
         }
@@ -87,8 +94,8 @@ void alocarIAPA(int tabuleiro[12][12]) {
     else {
         int linha = numeroRandom(0, 11);
         int coluna = numeroRandom(0, 10);
-        if(verifica(tabuleiro, linha, coluna, direcao, 2) == 1) {
-            for (int i=coluna; i<coluna+2; i++) {
+        if(verifica(tabuleiro, linha, coluna, direcao, extensao) == true) {
+            for (int i=coluna; i<coluna+extensao; i++) {
                 tabuleiro[linha][i] = 2;
             }
         }
@@ -98,13 +105,14 @@ void alocarIAPA(int tabuleiro[12][12]) {
     }
 }
 
-void alocarBMT(int tabuleiro[12][12]) {
-    int direcao = numeroRandom(1, 2);// 1 para vertical, 2 para horizontal
-    if (direcao == 1) {
+void alocarBMT(int tabuleiro[tamanho][tamanho]) {
+    int extensao = 3;
+    int direcao = numeroRandom(vertical, horizontal);
+    if (direcao == vertical) {
         int linha = numeroRandom(0, 9);// gera uma valor aleatorio para a linha
         int coluna = numeroRandom(0, 11);// gera um valor aleatorio para a coluna
-        if(verifica(tabuleiro, linha, coluna, direcao, 3) == 1) {
-            for (int i=linha; i<linha+3; i++) {// alocação da estrutura na matriz
+        if(verifica(tabuleiro, linha, coluna, direcao, extensao) == true) {
+            for (int i=linha; i<linha+extensao; i++) {// alocação da estrutura na matriz
                 tabuleiro[i][coluna] = 3;
             }
         }
@@ -115,8 +123,8 @@ void alocarBMT(int tabuleiro[12][12]) {
     else {
         int linha = numeroRandom(0, 11);
         int coluna = numeroRandom(0, 9);
-        if(verifica(tabuleiro, linha, coluna, direcao, 3) == 1) {
-            for (int i=coluna; i<coluna+3; i++) {
+        if(verifica(tabuleiro, linha, coluna, direcao, extensao) == true) {
+            for (int i=coluna; i<coluna+extensao; i++) {
                 tabuleiro[linha][i] = 3;
             }
         }
@@ -127,18 +135,19 @@ void alocarBMT(int tabuleiro[12][12]) {
 }
 
 void alocarBPC(int tabuleiro[12][12]){
-    int direcao = numeroRandom(1, 2);
-    if (direcao == 1) {
+    int extensao = 4;
+    int direcao = numeroRandom(vertical, horizontal);
+    if (direcao == vertical) {
         int linha = numeroRandom(0, 8);
         int coluna = numeroRandom(0, 11);
-        for (int i=linha; i<linha+4; i++) {
+        for (int i=linha; i<linha+extensao; i++) {
             tabuleiro[i][coluna] = 4;
         }
     }
     else {
         int linha = numeroRandom(0, 11);
         int coluna = numeroRandom(0, 8);
-        for (int i=coluna; i<coluna+4; i++) {
+        for (int i=coluna; i<coluna+extensao; i++) {
             tabuleiro[linha][i] = 4;
         }
     }
@@ -161,11 +170,11 @@ void alocar() {
 void desenharInterface (int mostrarTerreno){
     int i, j;
     if( mostrarTerreno == 0){
-        printf("################################################################\n");
-        printf("#############       bombardment of the virus       #############\n");
-        printf("################################################################\n\n");
-        printf("      A    B    C    D    E    F    G    H    I    J    L    M\n");
-        printf("----------------------------------------------------------------\n");
+        printf("####################################################\n");
+        printf("########      bombardment of the virus      ########\n");
+        printf("####################################################\n");
+        printf("     A   B   C   D   E   F   G   H   I   J   L   M\n");
+        printf("----------------------------------------------------\n");
         for(i = 0; i <= 11 ; i++){
             if (i > 9) {
                 printf("%i |", i);
@@ -174,17 +183,20 @@ void desenharInterface (int mostrarTerreno){
                 printf("%i  |", i);
             }
             for(j = 0; j <= 11; j++){
-                if(tabuleiroCopia[i][j] == 0) printf("  ~ |");
-                if(tabuleiroCopia[i][j] == 1) printf("  1 |");
-                if(tabuleiroCopia[i][j] == 2) printf("  2 |");
-                if(tabuleiroCopia[i][j] == 3) printf("  3 |");
-                if(tabuleiroCopia[i][j] == 4) printf("  4 |");
-                if(tabuleiroCopia[i][j] == 5) printf("  X |");
-
+                if(tabuleiroCopia[i][j] == 0) printf(" . |");
+                if(tabuleiroCopia[i][j] == 1) printf(" @ |");
+                if(tabuleiroCopia[i][j] == 2) printf(" # |");
+                if(tabuleiroCopia[i][j] == 3) printf(" o |");
+                if(tabuleiroCopia[i][j] == 4) printf(" * |");
+                if(tabuleiroCopia[i][j] == 5) printf(" X |");
             }
             printf("\n");
         }
-        printf("\n");
+        printf("\nx = Bomba perdida\n");
+        printf("@ = CT (tamanho 1)              Bombas restantes: %d\n", bombas);
+        printf("# = IAPA (tamanho 2)\n");
+        printf("o = BMT (tamanho 3)\n");
+        printf("* = BPC (tamanho 4)\n\n");
         if(estado == 2) {
             printf("  ====> AVISO : COLUNA OU LINHA, FORA DO PADRÃO \n");
         }
@@ -267,7 +279,7 @@ int jogadas(char coluna, int linha){
 }
 void menuGrafico(){
 	printf(" No ano de 2046, um grupo de cientista conseguem terminar o maior feito da humanidade “um botão de reiniciar” uma máquina do tempo. Motivo para ser comemorado pois a única salvação da terra é voltar no tempo e destruir todas as bases que contém o vírus que acabou com quase toda a população do planeta. Irineu foi o soldado qualificado para essa missão , voltando para o ano de 2014, após 5 anos preso nas instalações secretas da CIA conseguiu convencer o diretor da CIA alertando de diversos desastres antes mesmo de ter acontecido. Só que a arma biológica irá ser usada no ano de 2019 no dia 5 de março e faltando apenas um dia para impedir esses ataques , vão bombardear pontos exatos para a destruição dessas instalações e assim salvando a humanidade. \n  Você deve escolher uma posição dada pelas letras e pelos numeros de 0 a 11. Se acertar uma base é retornado o número da base, se não será retornado um X. O jogo acaba quando a base de todas as bases do inimigo forem destruidas \n\n");
-	
+
 }
 int main() {
 	menuGrafico();
