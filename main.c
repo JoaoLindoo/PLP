@@ -11,18 +11,17 @@
  * Matheus
  * Luan
  */
+
 #define tamanho 12
 #define true 1
 #define false 0
+#define vertical 1
+#define horizontal 2
 int tabuleiro[tamanho][tamanho];
 int tabuleiroCopia[tamanho][tamanho];
 int estado = 5;
 int pontuacao = 0;
-int bombas = 50;
-int vertical = 1;
-int horizontal = 2;
-
-
+int bombas = 1;
 /*
  A variavel estado pode ter 4 valores:
     * 0: quando a posição já foi bombardeada
@@ -192,7 +191,7 @@ void desenharInterface (int mostrarTerreno){
             }
             printf("\n");
         }
-        printf("\nx = Bomba perdida\n");
+        printf("\nX = Bomba perdida\n");
         printf("@ = CT (tamanho 1)              Bombas restantes: %d\n", bombas);
         printf("# = IAPA (tamanho 2)\n");
         printf("o = BMT (tamanho 3)\n");
@@ -201,11 +200,11 @@ void desenharInterface (int mostrarTerreno){
             printf("  ====> AVISO : COLUNA OU LINHA, FORA DO PADRÃO \n");
         }
     }else {
-        printf("################################################################\n");
-        printf("#############       bombardment of the virus       #############\n");
-        printf("################################################################\n\n");
-        printf("      A    B    C    D    E    F    G    H    I    J    L    M\n");
-        printf("----------------------------------------------------------------\n");
+        printf("####################################################\n");
+        printf("########      bombardment of the virus      ########\n");
+        printf("####################################################\n\n");
+        printf("     A   B   C   D   E   F   G   H   I   J   L   M\n");
+        printf("-----------------------------------------------------\n");
         for(i = 0; i <= 11 ; i++){
             if (i > 9) {
                 printf("%i |", i);
@@ -214,12 +213,12 @@ void desenharInterface (int mostrarTerreno){
                 printf("%i  |", i);
             }
             for(j = 0; j <= 11; j++){
-                if(tabuleiro[i][j] == 0) printf("    |");
-                if(tabuleiro[i][j] == 1) printf("  1 |");
-                if(tabuleiro[i][j] == 2) printf("  2 |");
-                if(tabuleiro[i][j] == 3) printf("  3 |");
-                if(tabuleiro[i][j] == 4) printf("  4 |");
-                if(tabuleiro[i][j] == 5) printf("  X |");
+                if(tabuleiro[i][j] == 0) printf("   |");
+                if(tabuleiro[i][j] == 1) printf(" 1 |");
+                if(tabuleiro[i][j] == 2) printf(" 2 |");
+                if(tabuleiro[i][j] == 3) printf(" 3 |");
+                if(tabuleiro[i][j] == 4) printf(" 4 |");
+                if(tabuleiro[i][j] == 5) printf(" X |");
 
             }
             printf("\n");
