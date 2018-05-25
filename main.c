@@ -21,7 +21,7 @@ int tabuleiro[tamanho][tamanho];
 int tabuleiroCopia[tamanho][tamanho];
 int estado = 5;
 int pontuacao = 0;
-int bombas = 1;
+int bombas = 45;
 /*
  A variavel estado pode ter 4 valores:
     * 0: quando a posição já foi bombardeada
@@ -29,7 +29,6 @@ int bombas = 1;
     * 2: posição inválida (quando o usuário informa uma posição que não existe)
     * 5: valor de inicialização
  */
-
 
 // retorna um numero aleatorio dentro do intervalo estabelecido
 int numeroRandom(int inicio, int fim) {
@@ -41,10 +40,7 @@ int numeroRandom(int inicio, int fim) {
 //garante que as estruturas fiquem separadas na matriz
 int verifica(int tabuleiro[tamanho][tamanho], int linha, int coluna, int direcao, int extensao) {
     if (direcao == vertical) {
-        if (tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha+extensao][coluna] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha-1][coluna+1] != 0 || tabuleiro[linha+extensao][coluna-1] != 0 || tabuleiro[linha+extensao][coluna+1] != 0) {
-            return false;
-        }
-        for (int i=linha; i<linha+extensao; i++) {
+        for (int i=linha-1; i<=linha+extensao; i++) {
             if(tabuleiro[i][coluna] != 0 || tabuleiro[i][coluna+1] != 0 || tabuleiro[i][coluna-1] != 0) {
                 return false;
             }
@@ -52,10 +48,7 @@ int verifica(int tabuleiro[tamanho][tamanho], int linha, int coluna, int direcao
         return true;
     }
     else {
-        if (tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha][coluna+extensao] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha-1][coluna+extensao] != 0 || tabuleiro[linha+1][coluna+extensao] != 0) {
-            return false;
-        }
-        for (int i=coluna; i<coluna+extensao; i++) {
+        for (int i=coluna-1; i<=coluna+extensao; i++) {
             if(tabuleiro[linha][i] != 0 || tabuleiro[linha+1][i] != 0 || tabuleiro[linha-1][i] != 0) {
                 return false;
             }
@@ -65,9 +58,10 @@ int verifica(int tabuleiro[tamanho][tamanho], int linha, int coluna, int direcao
 }
 
 void alocarCT(int tabuleiro[tamanho][tamanho]) {
+    int extensao = 1;
     int linha = numeroRandom(0, 11);
     int coluna = numeroRandom(0, 11);
-    if (tabuleiro[linha][coluna] != 0 || tabuleiro[linha+1][coluna] != 0 || tabuleiro[linha-1][coluna] != 0 || tabuleiro[linha][coluna+1] != 0 || tabuleiro[linha][coluna-1] != 0 || tabuleiro[linha-1][coluna-1] != 0 || tabuleiro[linha+1][coluna-1] != 0 || tabuleiro[linha+1][coluna+1] != 0 || tabuleiro[linha-1][coluna+1] != 0) {
+    if (verifica(tabuleiro, linha, coluna, vertical, extensao) == false) {
         alocarCT(tabuleiro);
     }
     else {
@@ -133,7 +127,7 @@ void alocarBMT(int tabuleiro[tamanho][tamanho]) {
     }
 }
 
-void alocarBPC(int tabuleiro[12][12]){
+void alocarBPC(int tabuleiro[tamanho][tamanho]){
     int extensao = 4;
     int direcao = numeroRandom(vertical, horizontal);
     if (direcao == vertical) {
@@ -151,7 +145,6 @@ void alocarBPC(int tabuleiro[12][12]){
         }
     }
 }
-
 
 // alocação automática de estruturas na matriz
 void alocar() {
@@ -202,9 +195,9 @@ void desenharInterface (int mostrarTerreno){
     }else {
         printf("####################################################\n");
         printf("########      bombardment of the virus      ########\n");
-        printf("####################################################\n\n");
+        printf("####################################################\n");
         printf("     A   B   C   D   E   F   G   H   I   J   L   M\n");
-        printf("-----------------------------------------------------\n");
+        printf("----------------------------------------------------\n");
         for(i = 0; i <= 11 ; i++){
             if (i > 9) {
                 printf("%i |", i);
@@ -228,7 +221,6 @@ void desenharInterface (int mostrarTerreno){
 }
 int jogadas(char coluna, int linha){
     int colunaID;
-    bombas--;
     if((coluna != 'A' && coluna != 'B' && coluna != 'C'
             && coluna != 'D' && coluna != 'E' && coluna != 'F' && coluna != 'G' && coluna != 'H' && coluna != 'I' && coluna != 'J' && coluna != 'L' && coluna != 'M')) {
         return 2 ; // Caso a coluna seria invalida
@@ -248,6 +240,7 @@ int jogadas(char coluna, int linha){
         if(coluna == 'J') colunaID = 9;
         if(coluna == 'L') colunaID = 10;
         if(coluna == 'M') colunaID = 11;
+        bombas--;
         //posicao ja bombardeada
         if(tabuleiroCopia[linha][colunaID] != 0){
             return 0;
