@@ -26,8 +26,9 @@ int bombas = 45;
  A variavel estado pode ter 4 valores:
     * 0: quando a posição já foi bombardeada
     * 1: quando a jogada é válida
-    * 2: posição inválida (quando o usuário informa uma posição que não existe)
+    * 2: coluna invalida
     * 5: valor de inicialização
+    * 6: linha invalida
  */
 
 // retorna um numero aleatorio dentro do intervalo estabelecido
@@ -190,7 +191,13 @@ void desenharInterface (int mostrarTerreno){
         printf("o = BMT (tamanho 3)\n");
         printf("* = BPC (tamanho 4)\n\n");
         if(estado == 2) {
-            printf("  ====> AVISO : COLUNA OU LINHA, FORA DO PADRÃO \n");
+            printf("  ====> AVISO : COLUNA FORA DO PADRÃO \n");
+        }
+        if(estado == 6) {
+            printf("  ====> AVISO : LINHA FORA DO PADRÃO \n");
+        }
+        if(estado == 0){
+            printf("  ====> AVISO : POSIÇÃO JÁ OCUPADA \n");
         }
     }else {
         printf("####################################################\n");
@@ -217,15 +224,24 @@ void desenharInterface (int mostrarTerreno){
             printf("\n");
         }
         printf("\n");
+        if(bombas == 0) {
+            printf("VOCÊ FALHOU NA MISSÃO, FIM DA HUMANIDADE !");
+        }
+        if(pontuacao == 18) {
+            printf("MISSÃO COMPLETA, OBRIGADO POR SALVAR A HUMANIDADE");
+        }
     }
 }
 int jogadas(char coluna, int linha){
     int colunaID;
     if((coluna != 'A' && coluna != 'B' && coluna != 'C'
-            && coluna != 'D' && coluna != 'E' && coluna != 'F' && coluna != 'G' && coluna != 'H' && coluna != 'I' && coluna != 'J' && coluna != 'L' && coluna != 'M')) {
+            && coluna != 'D' && coluna != 'E' && coluna != 'F'
+            && coluna != 'G' && coluna != 'H' && coluna != 'I' && coluna != 'J' && coluna != 'L' && coluna != 'M')) {
         return 2 ; // Caso a coluna seria invalida
-    }else if((linha != 0 && linha != 1 && linha != 2 && linha != 3 && linha != 4 && linha != 5 && linha !=6 && linha != 7 && linha != 8 && linha != 9 && linha != 10 && linha != 11)) {
-        return 2; // Caso de linha invalida
+    }else if((linha != 0 && linha != 1 && linha != 2 && linha != 3 && linha != 4
+        && linha != 5 && linha !=6 && linha != 7 &&
+        linha != 8 && linha != 9 && linha != 10 && linha != 11)) {
+        return 6; // Caso de linha invalida
     }else {
         // posição valida
         if(coluna == 'A') colunaID = 0;
@@ -273,9 +289,7 @@ void menuGrafico(){
 	printf(" No ano de 2046, um grupo de cientista conseguem terminar o maior feito da humanidade “um botão de reiniciar” uma máquina do tempo. Motivo para ser comemorado pois a única salvação da terra é voltar no tempo e destruir todas as bases que contém o vírus que acabou com quase toda a população do planeta. Irineu foi o soldado qualificado para essa missão , voltando para o ano de 2014, após 5 anos preso nas instalações secretas da CIA conseguiu convencer o diretor da CIA alertando de diversos desastres antes mesmo de ter acontecido. Só que a arma biológica irá ser usada no ano de 2019 no dia 5 de março e faltando apenas um dia para impedir esses ataques , vão bombardear pontos exatos para a destruição dessas instalações e assim salvando a humanidade. \n  Você deve escolher uma posição dada pelas letras e pelos numeros de 0 a 11. Se acertar uma base é retornado o número da base, se não será retornado um X. O jogo acaba quando a base de todas as bases do inimigo forem destruidas \n\n");
 
 }
-int main() {
-	menuGrafico();
-    printf("SALVE O MUNDO \n\n");
+void play(){
     int i;
     int j;
     int linha;
@@ -292,6 +306,20 @@ int main() {
         estado = jogadas(colunaUpperCase,linha);
         system("clear");
     }
-    desenharInterface(1); // Quando terminar mostra o campo original
+     desenharInterface(1);
+}
+int main() {
+    menuGrafico();
+    printf("\nBem Vindo ao ano começo do fim , a gasolina está acabando e o mundo também só você poderá salva-lo e deter o virus mortal\n");
+    printf("\nBaseado em uma historia real. Se voce nao lembra foi por que o mundo ja foi salvo e sua linha do tempo mudou\n");
+    int escolha;
+    printf("[1] Pronto para a simulação : ");
+    scanf("%i",&escolha);
+    if(escolha == 1){
+        getchar();
+        play();
+    }else {
+        printf("----E O MUNDO ACABOU!----");
+    }
     return 0;
 }
